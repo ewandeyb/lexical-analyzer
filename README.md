@@ -2,28 +2,28 @@
 
 | Category               | Token Type          | Lexeme / Pattern                  |
 | ---------------------- | ------------------- | --------------------------------- |
-| Program Delimiters     | PROG_START        | IOL                             |
-|                        | PROG_END          | LOI                             |
-| Data Types             | TYPE_INT          | INT                             |
-|                        | TYPE_STR          | STR                             |
-| KEYWORD                | KEY_ASSIGN        | INTO                            |
-|                        | KEY_IS            | IS                              |
-|                        | KEY_INPUT         | BEG                             |
-|                        | KEY_OUTPUT        | PRINT                           |
-| Operators              | OP_ADD            | ADD                             |
-|                        | OP_SUB            | SUB                             |
-|                        | OP_MULT           | MULT                            |
-|                        | OP_DIV            | DIV                             |
-|                        | OP_MOD            | MOD                             |
-| Built-in Commands      | CMD_NEWLINE       | NEWLN                           |
-| Literals               | INT_LIT           | A sequence of digits (e.g., 123) |
-| Variables              | IDENTIFIER        | Starts with a letter (e.g., num) |
-| Special                | EOF               | (End of File)                     |
+| Program Delimiters     | IOL                 | IOL                               |
+|                        | LOI                 | LOI                               |
+| Data Types             | TYPE_INT            | INT                               |
+|                        | TYPE_STR            | STR                               |
+| KEYWORD                | INTO                | INTO                              |
+|                        | IS                  | IS                                |
+|                        | BEG                 | BEG                               |
+|                        | PRINT               | PRINT                             |
+| Operators              | ADD                 | ADD                               |
+|                        | SUB                 | SUB                               |
+|                        | MULT                | MULT                              |
+|                        | DIV                 | DIV                               |
+|                        | MOD                 | MOD                               |
+| Built-in Commands      | NEWLN               | NEWLN                             |
+| Literals               | INT_LIT             | A sequence of digits (e.g., 123)  |
+| Variables              | IDENTIFIER          | Starts with a letter (e.g., num)  |
+| Special                | EOF                 | (End of File)                     |
 
 
 EBNF
-
-- program    -> PROG_START body PROG_END EOF
+```
+- program    -> IOL body LOI EOF
 - body       -> { statement }
 
 - statement  -> declaration
@@ -31,20 +31,21 @@ EBNF
 			 | io_statement
 			 | newline_command
 
-- declaration -> TYPE_INT IDENTIFIER [ KEY_IS INT_LIT ]
-			  | TYPE_STR IDENTIFIER [ KEY_IS STRING_LIT ]
+- declaration -> TYPE_INT IDENTIFIER [ IS INT_LIT ]
+			  | TYPE_STR IDENTIFIER [ IS STRING_LIT ]
 
-- assignment -> IDENTIFIER KEY_ASSIGN expression
+- assignment -> IDENTIFIER INTO expression
 
-- io_statement -> KEY_INPUT IDENTIFIER
-			  | KEY_OUTPUT expression
+- io_statement -> BEG IDENTIFIER
+			  | PRINT expression
 
-- newline_command -> CMD_NEWLINE
+- newline_command -> NEWLN
 
-- expression -> term { (OP_ADD | OP_SUB) term }
+- expression -> term { (ADD | SUB) term }
 
-- term      -> factor { (OP_MULT | OP_DIV | OP_MOD) factor }
+- term      -> factor { (MULT | DIV | MOD) factor }
 
 - factor    -> INT_LIT
 			| IDENTIFIER
 			| '(' expression ')'
+```
