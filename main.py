@@ -19,9 +19,9 @@ class App(tk.Tk):
         self.init_menubar()
 
         self.init_background()
+        self.init_left_separator()
         self.init_output_panel()
 
-        self.init_left_separator()
         self.init_editor_panel()
         self.init_console_panel()
 
@@ -35,32 +35,42 @@ class App(tk.Tk):
         self["menu"] = self.menubar
 
     def init_background(self):
-        self.background = tk.Frame(self, bg="#2F5F9E", bd=6, relief="flat")
-
-        self.background.grid_rowconfigure(0, weight=1)
-        self.background.grid_columnconfigure((0, 1), weight=1)
+        self.background = tk.PanedWindow(
+            self,
+            bg="#2F5F9E",
+            bd=6,
+            relief="flat",
+            orient=tk.HORIZONTAL,
+            handlesize=2,
+        )
 
         self.background.pack(fill="both", expand=True, padx=8, pady=8)
 
     def init_left_separator(self):
         """Separates the editor and console vertically."""
-        self.left_separator = tk.Frame(self.background)
-        self.left_separator.grid(row=0, column=0, sticky="nsew", padx=6, pady=6)
-
-        self.left_separator.grid_columnconfigure(0, weight=1)
-        self.left_separator.grid_rowconfigure(0, weight=3)
-        self.left_separator.grid_rowconfigure(1, weight=1)
+        self.left_separator = tk.PanedWindow(
+            self.background,
+            background="#000000",
+            orient=tk.VERTICAL,
+            handlesize=2,
+        )
+        self.background.add(self.left_separator)
 
     def init_output_panel(self):
         self.output_panel = OutputPanel(self.background)
+        self.background.add(self.output_panel)
 
     def init_console_panel(self):
         """Only call after self.init_left_separator()"""
         self.console_panel = ConsolePanel(self.left_separator)
+        self.left_separator.add(self.console_panel)
 
     def init_editor_panel(self):
         """Only call after self.init_left_separator()"""
         self.editor_panel = EditorPanel(self.left_separator)
+        self.left_separator.add(
+            self.editor_panel, height=self.winfo_vrootheight() * 3 / 5
+        )
 
     def file_new(self):
         # TODO: handle new file

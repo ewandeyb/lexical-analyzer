@@ -7,4 +7,8 @@ class EditorPanel(tk.Frame):
     def __init__(self, parent, *args, **kwargs) -> None:
         super().__init__(master=parent, bg=self.bg, *args, **kwargs)
 
-        self.grid(row=0, column=0, sticky="nsew")
+        self.init_editor()
+
+    def init_editor(self):
+        self.editor = tk.Text(self)
+        self.editor.pack(expand=True, fill="both")
