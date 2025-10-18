@@ -36,6 +36,11 @@ class Token:
     line: int
     column: int
 
+    def __str__(self) -> str:
+        value = f" = {self.value}" if self.value else ""
+        name = str(self.name).lstrip("TokenType.")
+        return f"<{name}{value} [{self.line},{self.column}]>"
+
 
 class Lexer:
     KEYWORDS = {
@@ -135,12 +140,13 @@ class Lexer:
             ch = self._advance()
 
             if not ch:  # EOF case
-                token = self._make_token(
-                    current_token,
-                    start_line,
-                    start_column,
-                )
-                self.tokens.append(token)
+                if current_token:
+                    token = self._make_token(
+                        current_token,
+                        start_line,
+                        start_column,
+                    )
+                    self.tokens.append(token)
 
                 self.tokens.append(
                     Token(
