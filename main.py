@@ -1,6 +1,7 @@
 import io
 import tkinter as tk
 from tkinter import filedialog as fd
+from tkinter import messagebox as msg
 
 from lexer import Lexer
 from panels.console import ConsolePanel
@@ -107,6 +108,8 @@ class App(tk.Tk):
         # write into .tkn file
         with open(f"{self.file_name.rstrip('.iol')}.tkn", "w") as f:
             f.writelines("\n".join(map(str, lexer.tokens)))
+
+        msg.showinfo("Success", "The code has been tokenized successfully.")
 
 
 class AppMenu(tk.Menu):

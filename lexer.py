@@ -140,12 +140,13 @@ class Lexer:
             ch = self._advance()
 
             if not ch:  # EOF case
-                token = self._make_token(
-                    current_token,
-                    start_line,
-                    start_column,
-                )
-                self.tokens.append(token)
+                if current_token:
+                    token = self._make_token(
+                        current_token,
+                        start_line,
+                        start_column,
+                    )
+                    self.tokens.append(token)
 
                 self.tokens.append(
                     Token(
