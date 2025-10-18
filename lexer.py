@@ -36,6 +36,11 @@ class Token:
     line: int
     column: int
 
+    def __str__(self) -> str:
+        value = f" = {self.value}" if self.value else ""
+        name = str(self.name).lstrip("TokenType.")
+        return f"<{name}{value} [{self.line},{self.column}]>"
+
 
 class Lexer:
     KEYWORDS = {

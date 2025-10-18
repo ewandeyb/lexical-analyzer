@@ -1,13 +1,15 @@
+import io
 import tkinter as tk
 from tkinter import filedialog as fd
 
+from lexer import Lexer
 from panels.console import ConsolePanel
 from panels.editor import EditorPanel
 from panels.output import OutputPanel
 
 
 class App(tk.Tk):
-    DEFAULT_FILENAME = "program.iol"
+    DEFAULT_FILENAME: str = "program.iol"
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -76,6 +78,7 @@ class App(tk.Tk):
         # TODO: handle new file
         self.file_name = self.DEFAULT_FILENAME
         self.update_title("New file")
+        self.editor_panel.editor.delete("1.0", "end")
 
     def file_open(self):
         # TODO: handle file open
@@ -92,9 +95,18 @@ class App(tk.Tk):
             self.file_name = f.name.split("/")[-1]
             self.update_title(self.file_name)
 
+            content = f.readlines()
+            self.editor_panel.editor.delete("1.0", "end")  # clear content
+            self.editor_panel.editor.insert("1.0", "".join(content))
+
     def compile_tokenize(self):
-        # TODO: handle tokenize
-        pass
+        stream = io.StringIO(self.editor_panel.editor.get("1.0", "end").strip())
+        lexer = Lexer(stream)
+        lexer.tokenize()
+
+        # write into .tkn file
+        with open(f"{self.file_name.rstrip('.iol')}.tkn", "w") as f:
+            f.writelines("\n".join(map(str, lexer.tokens)))
 
 
 class AppMenu(tk.Menu):
