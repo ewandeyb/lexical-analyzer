@@ -1,47 +1,131 @@
 import tkinter as tk
+from tkinter import filedialog as fd
 
-def ui(root: tk.Tk) -> None:
-    root.title("Lexical Analyzer")
-    root.geometry("900x560")
+from panels.console import ConsolePanel
+from panels.editor import EditorPanel
+from panels.output import OutputPanel
 
-    # Outer frame acts as the blue border
-    outer = tk.Frame(root, bg="#2F5F9E", bd=6, relief="flat")
-    outer.pack(fill="both", expand=True, padx=8, pady=8)
 
-    # Use grid inside the outer frame
-    outer.grid_rowconfigure(1, weight=1)
-    outer.grid_columnconfigure(0, weight=1)
+class App(tk.Tk):
+    DEFAULT_FILENAME = "program.iol"
 
-    # Main content area
-    content = tk.Frame(outer, bg="#50779F")
-    content.grid(row=1, column=0, sticky="nsew", padx=6, pady=6)
-    content.grid_rowconfigure(0, weight=1)
-    content.grid_columnconfigure(0, weight=3)
-    content.grid_columnconfigure(1, weight=2)
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
 
-    # Left column which itself will have two stacked panels
-    left_col = tk.Frame(content, bg="#50779F")
-    left_col.grid(row=0, column=0, sticky="nsew", padx=(6, 3), pady=6)
-    left_col.grid_rowconfigure(0, weight=3)
-    left_col.grid_rowconfigure(1, weight=1)
-    left_col.grid_columnconfigure(0, weight=1)
+        self.file_name = self.DEFAULT_FILENAME
+        self.update_title("New file")
+        self.geometry("900x560")
 
-    # Big green panel (top-left)
-    code_editor = tk.Frame(left_col, bg="#B7D06B")
-    code_editor.grid(row=0, column=0, sticky="nsew")
+        self.init_menubar()
 
-    # Orange panel (bottom-left)
-    console = tk.Frame(left_col, bg="#F2A65A", height=80)
-    console.grid(row=1, column=0, sticky="nsew", pady=(8, 0))
+        self.init_background()
+        self.init_output_panel()
 
-    # Right purple panel
-    table_of_vars = tk.Frame(content, bg="#7D5AA3")
-    table_of_vars.grid(row=0, column=1, sticky="nsew", padx=(3, 6), pady=6)
+        self.init_left_separator()
+        self.init_editor_panel()
+        self.init_console_panel()
+
+    def update_title(self, new_title):
+        """Update the title while maintaining IOL suffix"""
+        self.wm_title(f"{new_title} | IOL")
+
+    def init_menubar(self):
+        self.option_add("*tearOff", tk.FALSE)
+        self.menubar = AppMenu(self)
+        self["menu"] = self.menubar
+
+    def init_background(self):
+        self.background = tk.Frame(self, bg="#2F5F9E", bd=6, relief="flat")
+
+        self.background.grid_rowconfigure(0, weight=1)
+        self.background.grid_columnconfigure((0, 1), weight=1)
+
+        self.background.pack(fill="both", expand=True, padx=8, pady=8)
+
+    def init_left_separator(self):
+        """Separates the editor and console vertically."""
+        self.left_separator = tk.Frame(self.background)
+        self.left_separator.grid(row=0, column=0, sticky="nsew", padx=6, pady=6)
+
+        self.left_separator.grid_columnconfigure(0, weight=1)
+        self.left_separator.grid_rowconfigure(0, weight=3)
+        self.left_separator.grid_rowconfigure(1, weight=1)
+
+    def init_output_panel(self):
+        self.output_panel = OutputPanel(self.background)
+
+    def init_console_panel(self):
+        """Only call after self.init_left_separator()"""
+        self.console_panel = ConsolePanel(self.left_separator)
+
+    def init_editor_panel(self):
+        """Only call after self.init_left_separator()"""
+        self.editor_panel = EditorPanel(self.left_separator)
+
+    def file_new(self):
+        # TODO: handle new file
+        self.file_name = self.DEFAULT_FILENAME
+        self.update_title("New file")
+
+    def file_open(self):
+        # TODO: handle file open
+        file = fd.askopenfile(
+            title="Open File",
+            filetypes=[("Integer Oriented Language files", "*.iol")],
+        )
+
+        # No file selected
+        if not file:
+            return
+
+        with file as f:
+            self.file_name = f.name.split("/")[-1]
+            self.update_title(self.file_name)
+
+    def compile_tokenize(self):
+        # TODO: handle tokenize
+        pass
+
+
+class AppMenu(tk.Menu):
+    def __init__(self, parent, *args, **kwargs) -> None:
+        super().__init__(parent, *args, **kwargs)
+
+        self.parent = parent
+
+        self.init_file_menu()
+        self.init_compile_menu()
+        self.init_execute_menu()
+
+    def init_file_menu(self):
+        menu_file = tk.Menu(self)
+
+        menu_file.add_command(label="New File", command=self.parent.file_new)
+        menu_file.add_command(label="Open File", command=self.parent.file_open)
+
+        self.add_cascade(menu=menu_file, label="File")
+
+    def init_compile_menu(self):
+        menu_compile = tk.Menu(self)
+
+        menu_compile.add_command(
+            label="Tokenize",
+            command=self.parent.compile_tokenize,
+        )
+        self.add_cascade(menu=menu_compile, label="Compile")
+
+    def init_execute_menu(self):
+        menu_execute = tk.Menu(self)
+
+        # TODO: add execute commands
+
+        self.add_cascade(menu=menu_execute, label="Execute")
+
 
 def main():
-    root = tk.Tk()
-    ui(root)
-    root.mainloop()
+    app = App()
+    app.mainloop()
+
 
 if __name__ == "__main__":
     main()
