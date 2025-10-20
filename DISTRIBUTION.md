@@ -1,26 +1,30 @@
+
 Documentation file: includes description of your program, parts/modules/functions of
 the program and their corresponding description, control flow of the whole program,
 work distribution to members.
+## Documentation
 
 
+This is the lexical analyzer for our custom compiler and language. Below are the project contributors and a high-level summary of each person's main responsibilities.
 
-This is the lexical analyzer of our custom compiler with a custom programming language. The members who developed it are namely:
+### Contributors
+------------
+
+- Legolas Tyrael Lada
+- Sharmaigne Angelie Mabano
+- Aaron Dave A. Siapuatco
+
+### Work distribution
+-----------------
 
 Legolas Tyrael Lada
-Sharmaigne Angelie Mabano
-Aaron Dave A. Siapuatco
-
-Work Distribution:
-
-Legolas Tyrael Lada
-- Implemented the core lexical analysis and tokenizer (token definitions and lexing engine).
-- Integrated the lexer with the GUI and wired token output to the interface.
-- Refactored GUI components for clarity and maintainability.
+- Implemented most of the core lexical analysis and tokenizer (token definitions and lexing engine).
+- Developed the corresponding tests assosciated with the engine.
 
 Sharmaigne Angelie Mabano
-- 
-- 
+- Developed and refactored the GUI for the compiler.
+- Did the integration of the gui and the lexing engine.
 
 Aaron Dave A. Siapuatco
 - Developed the language grammar and EBNF rules that define syntax and token structure.
-- Contributed to the GUI design and implemented portions of the UI layout.
+- Partly developed the GUI with tkinter, and helped with the tokenizer.

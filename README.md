@@ -9,7 +9,7 @@ uv run pre-commit install
 uv run pytest # for testing
 ```
 
-### Grmmar
+### Grammar
 
 | Category               | Token Type          | Lexeme / Pattern                  |
 | ---------------------- | ------------------- | --------------------------------- |
